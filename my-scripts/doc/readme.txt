@@ -1,8 +1,10 @@
 1) create a new repo on github
 
+git clone git@github.com:RobertBerger/meta-ampliphy.git
+
 2) add my-scripts dir
 
-cd meta-phytec
+cd meta-ampliphy
 
 echo "# meta-phytec fork" >> README.md
 
@@ -12,219 +14,250 @@ git add .
 
 git commit -m "first commit"
 
-git remote add origin git@github.com:RobertBerger/meta-phytec.git
+git remote add origin git@github.com:RobertBerger/meta-ampliphy.git
 
 git push -u origin master
 
 3) use my repo
 
-mv meta-phytec meta-phytec.ori
-git clone git@github.com:RobertBerger/meta-phytec.git
+mv meta-ampliphy meta-ampliphy.ori
+git clone git@github.com:RobertBerger/meta-ampliphy.git
 
 4) add upstream
 
-cd meta-phytec
+cd meta-ampliphy
 
-git remote add official-upstream git://github.com/phytec/meta-phytec
+git remote add official-upstream https://github.com/phytec/meta-ampliphy
 
 $ git fetch official-upstream
 
+git fetch official-upstream
 warning: no common commits
-remote: Enumerating objects: 19497, done.
-remote: Counting objects: 100% (19497/19497), done.
-remote: Compressing objects: 100% (4931/4931), done.
-remote: Total 19497 (delta 14128), reused 18843 (delta 13474), pack-reused 0
-Receiving objects: 100% (19497/19497), 2.86 MiB | 6.63 MiB/s, done.
-Resolving deltas: 100% (14128/14128), done.
-From git://github.com/phytec/meta-phytec
- * [new branch]        1.8.1-phy2-fix  -> official-upstream/1.8.1-phy2-fix
- * [new branch]        1.8.1-phy6-fix  -> official-upstream/1.8.1-phy6-fix
- * [new branch]        dizzy           -> official-upstream/dizzy
- * [new branch]        dunfell         -> official-upstream/dunfell
- * [new branch]        fido            -> official-upstream/fido
- * [new branch]        gatesgarth      -> official-upstream/gatesgarth
- * [new branch]        hardknott       -> official-upstream/hardknott
- * [new branch]        jethro          -> official-upstream/jethro
- * [new branch]        krogoth         -> official-upstream/krogoth
- * [new branch]        master          -> official-upstream/master
- * [new branch]        morty           -> official-upstream/morty
- * [new branch]        pyro            -> official-upstream/pyro
- * [new branch]        rocko           -> official-upstream/rocko
- * [new branch]        sumo            -> official-upstream/sumo
- * [new branch]        thud            -> official-upstream/thud
- * [new branch]        warrior         -> official-upstream/warrior
- * [new branch]        zeus            -> official-upstream/zeus
- * [new tag]           1.7.3-phy1      -> 1.7.3-phy1
- * [new tag]           1.8.1-phy2-fix1 -> 1.8.1-phy2-fix1
- * [new tag]           1.8.1-phy6-fix1 -> 1.8.1-phy6-fix1
- * [new tag]           1.7.0-phy1      -> 1.7.0-phy1
- * [new tag]           1.7.0-phy2      -> 1.7.0-phy2
- * [new tag]           1.7.0-phy3      -> 1.7.0-phy3
- * [new tag]           1.7.2-phy1      -> 1.7.2-phy1
- * [new tag]           1.7.2-phy2      -> 1.7.2-phy2
- * [new tag]           1.8.1-phy1      -> 1.8.1-phy1
- * [new tag]           1.8.1-phy2      -> 1.8.1-phy2
- * [new tag]           1.8.1-phy3      -> 1.8.1-phy3
- * [new tag]           1.8.1-phy4      -> 1.8.1-phy4
- * [new tag]           1.8.1-phy5      -> 1.8.1-phy5
- * [new tag]           1.8.1-phy6      -> 1.8.1-phy6
- * [new tag]           1.8.1-phy7      -> 1.8.1-phy7
- * [new tag]           1.8.1-phy8      -> 1.8.1-phy8
- * [new tag]           2.0.1-phy1      -> 2.0.1-phy1
- * [new tag]           2.0.1-phy2      -> 2.0.1-phy2
- * [new tag]           2.0.1-phy3      -> 2.0.1-phy3
- * [new tag]           2.1.1-phy1      -> 2.1.1-phy1
- * [new tag]           2.1.1-phy2      -> 2.1.1-phy2
- * [new tag]           2.1.2-phy1      -> 2.1.2-phy1
+remote: Enumerating objects: 21377, done.
+remote: Counting objects: 100% (4424/4424), done.
+remote: Compressing objects: 100% (1506/1506), done.
+remote: Total 21377 (delta 3237), reused 3942 (delta 2830), pack-reused 16953 (from 1)
+Receiving objects: 100% (21377/21377), 2.75 MiB | 14.30 MiB/s, done.
+Resolving deltas: 100% (14481/14481), done.
+From https://github.com/phytec/meta-ampliphy
+ * [new branch]      gatesgarth                        -> official-upstream/gatesgarth
+ * [new branch]      hardknott                         -> official-upstream/hardknott
+ * [new branch]      honister                          -> official-upstream/honister
+ * [new branch]      kirkstone                         -> official-upstream/kirkstone
+ * [new branch]      langdale                          -> official-upstream/langdale
+ * [new branch]      master                            -> official-upstream/master
+ * [new branch]      mickledore                        -> official-upstream/mickledore
+ * [new branch]      scarthgap                         -> official-upstream/scarthgap
+ * [new branch]      walnascar                         -> official-upstream/walnascar
+ * [new branch]      wrynose                           -> official-upstream/wrynose
+ * [new tag]         BSP-Yocto-Ampliphy-AM57x-PD26.1.0 -> BSP-Yocto-Ampliphy-AM57x-PD26.1.0
+ * [new tag]         BSP-Yocto-Ampliphy-i.MX6-PD25.1.1 -> BSP-Yocto-Ampliphy-i.MX6-PD25.1.1
+ * [new tag]         BSP-Yocto-NXP-i.MX8MP-PD22.1.2    -> BSP-Yocto-NXP-i.MX8MP-PD22.1.2
+ * [new tag]           1.7.0-phy1                                -> 1.7.0-phy1
+ * [new tag]           1.7.0-phy2                                -> 1.7.0-phy2
+ * [new tag]           1.7.2-phy1                                -> 1.7.2-phy1
+ * [new tag]           1.7.2-phy2                                -> 1.7.2-phy2
+ * [new tag]           1.7.2-phy3                                -> 1.7.2-phy3
+ * [new tag]           1.8.1-phy1                                -> 1.8.1-phy1
+ * [new tag]           1.8.1-phy2                                -> 1.8.1-phy2
+ * [new tag]           1.8.1-phy3                                -> 1.8.1-phy3
+ * [new tag]           1.8.1-phy4                                -> 1.8.1-phy4
+ * [new tag]           2.0.1-phy1                                -> 2.0.1-phy1
+ * [new tag]           2.0.1-phy2                                -> 2.0.1-phy2
+ * [new tag]           2.0.1-phy3                                -> 2.0.1-phy3
+ * [new tag]           2.1.1-phy1                                -> 2.1.1-phy1
+ * [new tag]           2.1.1-phy2                                -> 2.1.1-phy2
+ * [new tag]           3.3.1-phy1                                -> 3.3.1-phy1
+ * [new tag]           3.3.1-phy2                                -> 3.3.1-phy2
+ * [new tag]           3.3.1-phy3                                -> 3.3.1-phy3
+ * [new tag]           3.3.2-phy1                                -> 3.3.2-phy1
+ * [new tag]           3.3.3-phy1                                -> 3.3.3-phy1
+ * [new tag]           3.3.3-phy2                                -> 3.3.3-phy2
+ * [new tag]           3.3.3-phy3                                -> 3.3.3-phy3
+ * [new tag]           3.3.4-phy1                                -> 3.3.4-phy1
+ * [new tag]           3.3.4-phy2                                -> 3.3.4-phy2
+ * [new tag]           BSP-Yocto-Ampliphy-AM335x-PD23.1.0        -> BSP-Yocto-Ampliphy-AM335x-PD23.1.0
+ * [new tag]           BSP-Yocto-Ampliphy-AM57x-PD24.1.0         -> BSP-Yocto-Ampliphy-AM57x-PD24.1.0
+ * [new tag]           BSP-Yocto-Ampliphy-AM62Ax-PD23.1.0        -> BSP-Yocto-Ampliphy-AM62Ax-PD23.1.0
+ * [new tag]           BSP-Yocto-Ampliphy-AM62Ax-PD23.1.1        -> BSP-Yocto-Ampliphy-AM62Ax-PD23.1.1
+ * [new tag]           BSP-Yocto-Ampliphy-AM62Ax-PD24.1.0        -> BSP-Yocto-Ampliphy-AM62Ax-PD24.1.0
+ * [new tag]           BSP-Yocto-Ampliphy-AM62Ax-PD24.1.1        -> BSP-Yocto-Ampliphy-AM62Ax-PD24.1.1
+ * [new tag]           BSP-Yocto-Ampliphy-AM62Ax-PD24.1.2        -> BSP-Yocto-Ampliphy-AM62Ax-PD24.1.2
+ * [new tag]           BSP-Yocto-Ampliphy-AM62Ax-PD25.1.0        -> BSP-Yocto-Ampliphy-AM62Ax-PD25.1.0
+ * [new tag]           BSP-Yocto-Ampliphy-AM62Ax-PD25.1.1        -> BSP-Yocto-Ampliphy-AM62Ax-PD25.1.1
+ * [new tag]           BSP-Yocto-Ampliphy-AM62Lx-ALPHA1          -> BSP-Yocto-Ampliphy-AM62Lx-ALPHA1
+ * [new tag]           BSP-Yocto-Ampliphy-AM62Lx-ALPHA2          -> BSP-Yocto-Ampliphy-AM62Lx-ALPHA2
+ * [new tag]           BSP-Yocto-Ampliphy-AM62Px-ALPHA1          -> BSP-Yocto-Ampliphy-AM62Px-ALPHA1
+ * [new tag]           BSP-Yocto-Ampliphy-AM62Px-PD26.1.0        -> BSP-Yocto-Ampliphy-AM62Px-PD26.1.0
+ * [new tag]           BSP-Yocto-Ampliphy-AM62x-PD23.2.0         -> BSP-Yocto-Ampliphy-AM62x-PD23.2.0
+ * [new tag]           BSP-Yocto-Ampliphy-AM62x-PD23.2.1         -> BSP-Yocto-Ampliphy-AM62x-PD23.2.1
+ * [new tag]           BSP-Yocto-Ampliphy-AM62x-PD24.1.0         -> BSP-Yocto-Ampliphy-AM62x-PD24.1.0
+ * [new tag]           BSP-Yocto-Ampliphy-AM62x-PD24.1.1         -> BSP-Yocto-Ampliphy-AM62x-PD24.1.1
+ * [new tag]           BSP-Yocto-Ampliphy-AM62x-PD24.1.2         -> BSP-Yocto-Ampliphy-AM62x-PD24.1.2
+ * [new tag]           BSP-Yocto-Ampliphy-AM62x-PD25.1.0         -> BSP-Yocto-Ampliphy-AM62x-PD25.1.0
+ * [new tag]           BSP-Yocto-Ampliphy-AM62x-PD25.1.1         -> BSP-Yocto-Ampliphy-AM62x-PD25.1.1
+ * [new tag]           BSP-Yocto-Ampliphy-AM64x-PD23.2.0         -> BSP-Yocto-Ampliphy-AM64x-PD23.2.0
+ * [new tag]           BSP-Yocto-Ampliphy-AM64x-PD23.2.1         -> BSP-Yocto-Ampliphy-AM64x-PD23.2.1
+ * [new tag]           BSP-Yocto-Ampliphy-AM64x-PD24.1.0         -> BSP-Yocto-Ampliphy-AM64x-PD24.1.0
+ * [new tag]           BSP-Yocto-Ampliphy-AM64x-PD24.1.1         -> BSP-Yocto-Ampliphy-AM64x-PD24.1.1
+ * [new tag]           BSP-Yocto-Ampliphy-AM64x-PD25.1.0         -> BSP-Yocto-Ampliphy-AM64x-PD25.1.0
+ * [new tag]           BSP-Yocto-Ampliphy-AM64x-PD25.2.0         -> BSP-Yocto-Ampliphy-AM64x-PD25.2.0
+ * [new tag]           BSP-Yocto-Ampliphy-AM64x-PD25.2.1         -> BSP-Yocto-Ampliphy-AM64x-PD25.2.1
+ * [new tag]           BSP-Yocto-Ampliphy-AM67x-ALPHA1           -> BSP-Yocto-Ampliphy-AM67x-ALPHA1
+ * [new tag]           BSP-Yocto-Ampliphy-AM67x-PD25.1.0         -> BSP-Yocto-Ampliphy-AM67x-PD25.1.0
+ * [new tag]           BSP-Yocto-Ampliphy-AM67x-PD25.1.1         -> BSP-Yocto-Ampliphy-AM67x-PD25.1.1
+ * [new tag]           BSP-Yocto-Ampliphy-AM68x-ALPHA2           -> BSP-Yocto-Ampliphy-AM68x-ALPHA2
+ * [new tag]           BSP-Yocto-Ampliphy-AM68x-ALPHA3           -> BSP-Yocto-Ampliphy-AM68x-ALPHA3
+ * [new tag]           BSP-Yocto-Ampliphy-AM68x-PD24.1.0         -> BSP-Yocto-Ampliphy-AM68x-PD24.1.0
+ * [new tag]           BSP-Yocto-Ampliphy-i.MX6-PD21.1.1         -> BSP-Yocto-Ampliphy-i.MX6-PD21.1.1
+ * [new tag]           BSP-Yocto-Ampliphy-i.MX6-PD22.1.0         -> BSP-Yocto-Ampliphy-i.MX6-PD22.1.0
+ * [new tag]           BSP-Yocto-Ampliphy-i.MX6-PD22.1.1         -> BSP-Yocto-Ampliphy-i.MX6-PD22.1.1
+ * [new tag]           BSP-Yocto-Ampliphy-i.MX6-PD25.1.0         -> BSP-Yocto-Ampliphy-i.MX6-PD25.1.0
+ * [new tag]           BSP-Yocto-Ampliphy-i.MX6UL-PD21.2.0       -> BSP-Yocto-Ampliphy-i.MX6UL-PD21.2.0
+ * [new tag]           BSP-Yocto-Ampliphy-i.MX6UL-PD21.2.1       -> BSP-Yocto-Ampliphy-i.MX6UL-PD21.2.1
+ * [new tag]           BSP-Yocto-Ampliphy-i.MX6UL-PD22.1.0       -> BSP-Yocto-Ampliphy-i.MX6UL-PD22.1.0
+ * [new tag]           BSP-Yocto-Ampliphy-i.MX6UL-PD22.1.1       -> BSP-Yocto-Ampliphy-i.MX6UL-PD22.1.1
+ * [new tag]           BSP-Yocto-Ampliphy-i.MX6UL-PD24.1.0       -> BSP-Yocto-Ampliphy-i.MX6UL-PD24.1.0
+ * [new tag]           BSP-Yocto-Ampliphy-i.MX6UL-PD24.1.1       -> BSP-Yocto-Ampliphy-i.MX6UL-PD24.1.1
+ * [new tag]           BSP-Yocto-Ampliphy-i.MX6UL-PD24.1.2       -> BSP-Yocto-Ampliphy-i.MX6UL-PD24.1.2
+ * [new tag]           BSP-Yocto-Ampliphy-i.MX8MP-PD24.1.0       -> BSP-Yocto-Ampliphy-i.MX8MP-PD24.1.0
+ * [new tag]           BSP-Yocto-Ampliphy-i.MX8MP-PD24.1.1       -> BSP-Yocto-Ampliphy-i.MX8MP-PD24.1.1
+ * [new tag]           BSP-Yocto-Ampliphy-i.MX8MP-PD24.1.2       -> BSP-Yocto-Ampliphy-i.MX8MP-PD24.1.2
+ * [new tag]           BSP-Yocto-CelebrityFaceMatch-i.MX8MP-v0.6 -> BSP-Yocto-CelebrityFaceMatch-i.MX8MP-v0.6
+ * [new tag]           BSP-Yocto-CelebrityFaceMatch-i.MX8MP-v0.7 -> BSP-Yocto-CelebrityFaceMatch-i.MX8MP-v0.7
+ * [new tag]           BSP-Yocto-Connagtive-i.MX8MM-v2.0         -> BSP-Yocto-Connagtive-i.MX8MM-v2.0
+ * [new tag]           BSP-Yocto-EdgeAI-AM68x-v0.1               -> BSP-Yocto-EdgeAI-AM68x-v0.1
+ * [new tag]           BSP-Yocto-EdgeAI-AM68x-v0.2               -> BSP-Yocto-EdgeAI-AM68x-v0.2
+ * [new tag]           BSP-Yocto-ImagingKit-VC-i.MX8MP-v0.1      -> BSP-Yocto-ImagingKit-VC-i.MX8MP-v0.1
+ * [new tag]           BSP-Yocto-IndComms-IBV-AM64x-v0.1         -> BSP-Yocto-IndComms-IBV-AM64x-v0.1
+ * [new tag]           BSP-Yocto-KivyDemo-i.MX8MP-v0.1           -> BSP-Yocto-KivyDemo-i.MX8MP-v0.1
+ * [new tag]           BSP-Yocto-LVGLDemo-i.MX8MP-v0.1           -> BSP-Yocto-LVGLDemo-i.MX8MP-v0.1
+ * [new tag]           BSP-Yocto-LVGLDemo-i.MX8MP-v0.2           -> BSP-Yocto-LVGLDemo-i.MX8MP-v0.2
+ * [new tag]           BSP-Yocto-NXP-i.MX7-PD23.1.0              -> BSP-Yocto-NXP-i.MX7-PD23.1.0
+ * [new tag]           BSP-Yocto-NXP-i.MX7-PD23.1.1              -> BSP-Yocto-NXP-i.MX7-PD23.1.1
+ * [new tag]           BSP-Yocto-NXP-i.MX7-PD23.1.2              -> BSP-Yocto-NXP-i.MX7-PD23.1.2
+ * [new tag]           BSP-Yocto-NXP-i.MX8MM-PD22.1-rc1          -> BSP-Yocto-NXP-i.MX8MM-PD22.1-rc1
+ * [new tag]           BSP-Yocto-NXP-i.MX8MM-PD22.1.0            -> BSP-Yocto-NXP-i.MX8MM-PD22.1.0
+ * [new tag]           BSP-Yocto-NXP-i.MX8MM-PD22.1.1            -> BSP-Yocto-NXP-i.MX8MM-PD22.1.1
+ * [new tag]           BSP-Yocto-NXP-i.MX8MM-PD23.1.0            -> BSP-Yocto-NXP-i.MX8MM-PD23.1.0
+ * [new tag]           BSP-Yocto-NXP-i.MX8MM-PD25.1.0            -> BSP-Yocto-NXP-i.MX8MM-PD25.1.0
+ * [new tag]           BSP-Yocto-NXP-i.MX8MM-PD25.1.1            -> BSP-Yocto-NXP-i.MX8MM-PD25.1.1
+ * [new tag]           BSP-Yocto-NXP-i.MX8MP-FPSC-ALPHA1         -> BSP-Yocto-NXP-i.MX8MP-FPSC-ALPHA1
+ * [new tag]           BSP-Yocto-NXP-i.MX8MP-PD22.1.0            -> BSP-Yocto-NXP-i.MX8MP-PD22.1.0
+ * [new tag]           BSP-Yocto-NXP-i.MX8MP-PD22.1.1            -> BSP-Yocto-NXP-i.MX8MP-PD22.1.1
+ * [new tag]           BSP-Yocto-NXP-i.MX8MP-PD23.1.0            -> BSP-Yocto-NXP-i.MX8MP-PD23.1.0
+ * [new tag]           BSP-Yocto-NXP-i.MX8MP-PD24.1.0            -> BSP-Yocto-NXP-i.MX8MP-PD24.1.0
+ * [new tag]           BSP-Yocto-NXP-i.MX8MP-PD26.1.0            -> BSP-Yocto-NXP-i.MX8MP-PD26.1.0
+ * [new tag]           BSP-Yocto-NXP-i.MX91-PD24.2.1             -> BSP-Yocto-NXP-i.MX91-PD24.2.1
+ * [new tag]           BSP-Yocto-NXP-i.MX91-PD24.2.2             -> BSP-Yocto-NXP-i.MX91-PD24.2.2
+ * [new tag]           BSP-Yocto-NXP-i.MX91-PD26.1.0             -> BSP-Yocto-NXP-i.MX91-PD26.1.0
+ * [new tag]           BSP-Yocto-NXP-i.MX93-ALPHA1               -> BSP-Yocto-NXP-i.MX93-ALPHA1
+ * [new tag]           BSP-Yocto-NXP-i.MX93-PD24.1.0             -> BSP-Yocto-NXP-i.MX93-PD24.1.0
+ * [new tag]           BSP-Yocto-NXP-i.MX93-PD24.1.1             -> BSP-Yocto-NXP-i.MX93-PD24.1.1
+ * [new tag]           BSP-Yocto-NXP-i.MX93-PD24.2.0             -> BSP-Yocto-NXP-i.MX93-PD24.2.0
+ * [new tag]           BSP-Yocto-NXP-i.MX93-PD24.2.1             -> BSP-Yocto-NXP-i.MX93-PD24.2.1
+ * [new tag]           BSP-Yocto-NXP-i.MX93-PD24.2.2             -> BSP-Yocto-NXP-i.MX93-PD24.2.2
+ * [new tag]           BSP-Yocto-NXP-i.MX93-PD26.1.0             -> BSP-Yocto-NXP-i.MX93-PD26.1.0
+ * [new tag]           BSP-Yocto-NXP-i.MX95-ALPHA1               -> BSP-Yocto-NXP-i.MX95-ALPHA1
+ * [new tag]           BSP-Yocto-NXP-i.MX95-ALPHA2               -> BSP-Yocto-NXP-i.MX95-ALPHA2
+ * [new tag]           BSP-Yocto-SlintDemo-i.MX8MP-v0.1          -> BSP-Yocto-SlintDemo-i.MX8MP-v0.1
+ * [new tag]           BSP-Yocto-SlintDemo-i.MX8MP-v0.2          -> BSP-Yocto-SlintDemo-i.MX8MP-v0.2
+ * [new tag]           BSP-Yocto-phyCONTROL-Nova-i.MX8MP-v0.1    -> BSP-Yocto-phyCONTROL-Nova-i.MX8MP-v0.1
+
 ...
 
 $ git branch -a
 
 * master
-  remotes/official-upstream/1.8.1-phy2-fix
-  remotes/official-upstream/1.8.1-phy6-fix
-  remotes/official-upstream/dizzy
-  remotes/official-upstream/dunfell
-  remotes/official-upstream/fido
   remotes/official-upstream/gatesgarth
   remotes/official-upstream/hardknott
-  remotes/official-upstream/jethro
-  remotes/official-upstream/krogoth
+  remotes/official-upstream/honister
+  remotes/official-upstream/kirkstone
+  remotes/official-upstream/langdale
   remotes/official-upstream/master
-  remotes/official-upstream/morty
-  remotes/official-upstream/pyro
-  remotes/official-upstream/rocko
-  remotes/official-upstream/sumo
-  remotes/official-upstream/thud
-  remotes/official-upstream/warrior
-  remotes/official-upstream/zeus
+  remotes/official-upstream/mickledore
+  remotes/official-upstream/scarthgap
+  remotes/official-upstream/walnascar
+  remotes/official-upstream/wrynose
   remotes/origin/HEAD -> origin/master
   remotes/origin/master
+
 
 $ git tag -l
 
 1.7.0-phy1
 1.7.0-phy2
-1.7.0-phy3
 1.7.2-phy1
 1.7.2-phy2
-1.7.3-phy1
+1.7.2-phy3
 1.8.1-phy1
 1.8.1-phy2
-1.8.1-phy2-fix1
 1.8.1-phy3
 1.8.1-phy4
-1.8.1-phy5
-1.8.1-phy6
-1.8.1-phy6-fix1
-1.8.1-phy7
-1.8.1-phy8
 2.0.1-phy1
 2.0.1-phy2
 2.0.1-phy3
 2.1.1-phy1
 2.1.1-phy2
-2.1.2-phy1
-2.1.2-phy2
-2.1.2-phy3
-2.1.2-phy4
-2.1.2-phy5
-2.1.3-phy1
-2.1.3-phy2
-2.1.3-phy3
-2.1.3-phy4
-2.1.3-phy5
-2.1.3-phy6
-2.1.3-phy7
-2.1.3-phy8
-2.2.1-phy1
-2.2.1-phy2
-2.2.1-phy3
-2.2.1-phy4
-2.2.1-phy5
-2.2.1-phy6
-2.2.1-phy7
-2.2.1-phy8
-2.2.1-phy9
-2.2.2-phy1
-2.2.2-phy2
-2.2.2-phy3
+3.3.1-phy1
+3.3.1-phy2
+3.3.1-phy3
+3.3.2-phy1
+3.3.3-phy1
+3.3.3-phy2
+3.3.3-phy3
+3.3.4-phy1
+3.3.4-phy2
+BSP-Yocto-Ampliphy-AM335x-PD23.1.0
+BSP-Yocto-Ampliphy-AM57x-PD24.1.0
+BSP-Yocto-Ampliphy-AM57x-PD26.1.0
+BSP-Yocto-Ampliphy-AM62Ax-PD23.1.0
+BSP-Yocto-Ampliphy-AM62Ax-PD23.1.1
+BSP-Yocto-Ampliphy-AM62Ax-PD24.1.0
+BSP-Yocto-Ampliphy-AM62Ax-PD24.1.1
+BSP-Yocto-Ampliphy-AM62Ax-PD24.1.2
+BSP-Yocto-Ampliphy-AM62Ax-PD25.1.0
+BSP-Yocto-Ampliphy-AM62Ax-PD25.1.1
+BSP-Yocto-Ampliphy-AM62Lx-ALPHA1
+BSP-Yocto-Ampliphy-AM62Lx-ALPHA2
+BSP-Yocto-Ampliphy-AM62Px-ALPHA1
+BSP-Yocto-Ampliphy-AM62Px-PD26.1.0
+BSP-Yocto-Ampliphy-AM62x-PD23.2.0
+BSP-Yocto-Ampliphy-AM62x-PD23.2.1
+BSP-Yocto-Ampliphy-AM62x-PD24.1.0
+BSP-Yocto-Ampliphy-AM62x-PD24.1.1
+BSP-Yocto-Ampliphy-AM62x-PD24.1.2
+BSP-Yocto-Ampliphy-AM62x-PD25.1.0
+BSP-Yocto-Ampliphy-AM62x-PD25.1.1
+BSP-Yocto-Ampliphy-AM64x-PD23.2.0
+BSP-Yocto-Ampliphy-AM64x-PD23.2.1
+...
 
-Phytec uses this commit 3ba7567532bcda55d9d73deff80a350877b68d07 for the pd21.1.0-stm release
+5) use specific upstream branch and make our own branch
 
-$ git show 3ba7567532bcda55d9d73deff80a350877b68d07
-commit 3ba7567532bcda55d9d73deff80a350877b68d07
-Author: Christian Hemp <c.hemp@phytec.de>
-Date:   Fri Feb 19 16:51:04 2021 +0100
+git co remotes/origin/master
 
-    fix phygate tauri machine name
-    
-    Update kernel and u-boot recipe to new phygate-tauri machine name.
-    
-    Signed-off-by: Christian Hemp <c.hemp@phytec.de>
-    Signed-off-by: Stefan Müller-Klieser <s.mueller-klieser@phytec.de>
+5.1) we want commit: 633e8ed591559b45eadd5f799f2ff7234c713445
 
-diff --git a/dynamic-layers/freescale-layer/recipes-kernel/linux/linux-imx_5.4.70_2.3.0-phy3.bb b/dynamic-layers/freescale-layer/recipes-kernel/linux/linux-imx_5.4.70_2.3.0-phy3.bb
-index ea1fdbea..439f2a74 100644
---- a/dynamic-layers/freescale-layer/recipes-kernel/linux/linux-imx_5.4.70_2.3.0-phy3.bb
-+++ b/dynamic-layers/freescale-layer/recipes-kernel/linux/linux-imx_5.4.70_2.3.0-phy3.bb
-@@ -25,6 +25,6 @@ COMPATIBLE_MACHINE .= "|phyboard-polis-imx8mm-3"
- COMPATIBLE_MACHINE .= "|phyboard-polis-imx8mm-4"
- COMPATIBLE_MACHINE .= "|phyboard-polis-imx8mn-1"
- COMPATIBLE_MACHINE .= "|phyboard-pollux-imx8mp-1"
--COMPATIBLE_MACHINE .= "|phygate-tauri-imx8mm-1"
--COMPATIBLE_MACHINE .= "|phygate-tauri-imx8mm-2"
-+COMPATIBLE_MACHINE .= "|phygate-tauri-l-imx8mm-1"
-+COMPATIBLE_MACHINE .= "|phygate-tauri-l-imx8mm-2"
- COMPATIBLE_MACHINE .= ")$"
-diff --git a/recipes-bsp/u-boot/u-boot-imx_2020.04_2.3.0-phy2.bb b/recipes-bsp/u-boot/u-boot-imx_2020.04_2.3.0-phy2.bb
-index aae54cc5..0e33781e 100644
---- a/recipes-bsp/u-boot/u-boot-imx_2020.04_2.3.0-phy2.bb
-+++ b/recipes-bsp/u-boot/u-boot-imx_2020.04_2.3.0-phy2.bb
-@@ -51,8 +51,8 @@ COMPATIBLE_MACHINE .= "|phyboard-polis-imx8mm-3"
- COMPATIBLE_MACHINE .= "|phyboard-polis-imx8mm-4"
- COMPATIBLE_MACHINE .= "|phyboard-polis-imx8mn-1"
- COMPATIBLE_MACHINE .= "|phyboard-pollux-imx8mp-1"
--COMPATIBLE_MACHINE .= "|phygate-tauri-imx8mm-1"
--COMPATIBLE_MACHINE .= "|phygate-tauri-imx8mm-2"
-+COMPATIBLE_MACHINE .= "|phygate-tauri-l-imx8mm-1"
-+COMPATIBLE_MACHINE .= "|phygate-tauri-l-imx8mm-2"
- COMPATIBLE_MACHINE .= ")$"
- 
- UBOOT_NAME_mx8 = "u-boot-${MACHINE}.bin-${UBOOT_CONFIG}"
+git co 633e8ed591559b45eadd5f799f2ff7234c713445
 
-5) use specific tag/commit and make own branch
+git branch 2026-08-11-training
 
-$ git co 3ba7567532bcda55d9d73deff80a350877b68d07
-Note: checking out '3ba7567532bcda55d9d73deff80a350877b68d07'.
+git co 2026-08-11-training
 
-You are in 'detached HEAD' state. You can look around, make experimental
-changes and commit them, and you can discard any commits you make in this
-state without impacting any branches by performing another checkout.
+# that's the unmodified meta-ampliphy
+git tag meta-ampliphy-633e8ed591559b45eadd5f799f2ff7234c713445
 
-If you want to create a new branch to retain commits you create, you may
-do so (now or later) by using -b with the checkout command again. Example:
+5.2) staging/meld merge in the modifications
 
-  git checkout -b <new-branch-name>
+5.3) push upstream
 
-HEAD is now at 3ba75675 fix phygate tauri machine name
+git co master
+cd my-scripts
+./push-all-to-github.sh
 
-$ git checkout -b 2021-06-09-3ba7567532bcda55d9d73deff80a350877b68d07-pd21.1.0-stm-dunfell
-Switched to a new branch '2021-06-09-3ba7567532bcda55d9d73deff80a350877b68d07-pd21.1.0-stm-dunfell'
 
-$ git branch
-* 2021-06-09-3ba7567532bcda55d9d73deff80a350877b68d07-pd21.1.0-stm-dunfell
-  master
 
-our hacked version of this branch (subset and modifications)
-
-$ git branch 2021-06-09-pd21.1.0-stm-dunfell-as-hardknott
-$ git co 2021-06-09-pd21.1.0-stm-dunfell-as-hardknott
-Switched to branch '2021-06-09-pd21.1.0-stm-dunfell-as-hardknott'
-$ git branch
-  2021-06-09-3ba7567532bcda55d9d73deff80a350877b68d07-pd21.1.0-stm-dunfell
-* 2021-06-09-pd21.1.0-stm-dunfell-as-hardknott
-  master
 
 #5) use specific upstream branch/commit and make own branch
 #
