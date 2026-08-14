@@ -53,7 +53,7 @@ IMAGE_BUILDINFO_VARS:append = " DATETIME DISTRO_NAME IMAGE_BASENAME MACHINE TUNE
 IMAGE_BUILDINFO_VARS:append = " MACHINE_FEATURES DISTRO_FEATURES IMAGE_FEATURES"
 
 # All images build with the distribution get the version package
-IMAGE_INSTALL:append = " os-release lsb-release"
+IMAGE_INSTALL:append = " os-release"
 
 # QA settings
 INHERIT += "sanity"
