@@ -1,0 +1,48 @@
+on the build machine:
+
+backup meta-ampliphy (tarball)
+
+cd meta-ampliphy
+
+git co master
+git remote add official-upstream https://github.com/phytec/meta-ampliphy
+git fetch official-upstream
+
+# here are my modifications to a previous version
+git checkout 2026-08-11-training
+
+# new branch
+git checkout -b 2026-08-11-training-merged
+git diff 2026-08-11-training
+# they should be identical and we should be on the 2026-08-11-training-merged branch
+
+# rebase
+git rebase official-upstream/master
+
+Auto-merging recipes-core/systemd/systemd-conf_%.bbappend
+CONFLICT (content): Merge conflict in recipes-core/systemd/systemd-conf_%.bbappend
+error: could not apply 90fadeeb... systemd-conf removed fixed IP madness and some others
+hint: Resolve all conflicts manually, mark them as resolved with
+hint: "git add/rm <conflicted_files>", then run "git rebase --continue".
+hint: You can instead skip this commit: run "git rebase --skip".
+hint: To abort and get back to the state before "git rebase", run "git rebase --abort".
+Could not apply 90fadeeb... systemd-conf removed fixed IP madness and some others
+
+vim recipes-core/systemd/systemd-conf_%.bbappend
+
+<<<<<<< HEAD
+    file://10-watchdog.conf \
+    ${@bb.utils.contains('FIRST_END_DEVICE', '0', ' file://10-end0.network', '', d)} \
+    file://10-end1.network \
+    file://10-end2.network \
+    file://10-end3.network \
+    file://10-end4.network \
+    file://10-ethernet.link \
+    file://11-can.network \
+    file://90-dhcp-default.network \
+    ${@bb.utils.contains("MACHINE_FEATURES", "camera", "file://90-phycam.rules", "", d)} \
+=======
+>>>>>>> 90fadeeb (systemd-conf removed fixed IP madness and some others)
+
+
+
