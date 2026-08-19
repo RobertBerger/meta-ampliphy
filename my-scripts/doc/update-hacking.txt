@@ -45,4 +45,83 @@ vim recipes-core/systemd/systemd-conf_%.bbappend
 >>>>>>> 90fadeeb (systemd-conf removed fixed IP madness and some others)
 
 
+I make it look like the modified file:
+
+SRC_URI += " \
+    file://10-wait-online-any.conf \
+"
+
+#    file://10-watchdog.conf
+#    ${@bb.utils.contains('FIRST_END_DEVICE', '0', ' file://10-end0.network', '', d)}
+#    file://10-end1.network
+#    file://10-end2.network
+#    file://10-end3.network
+#    file://10-end4.network
+#    file://10-ethernet.link
+#    file://11-can.network
+#    file://11-fcan.network
+#    file://90-dhcp-default.network
+#    ${@bb.utils.contains("MACHINE_FEATURES", "camera", "file://90-phycam.rules", "", d)}
+
+
+git add recipes-core/systemd/systemd-conf_%.bbappend
+git rebase --continue
+
+[detached HEAD 81d83c15] systemd-conf removed fixed IP madness and some others
+ Author: Robert Berger <Robert.Berger@ReliableEmbeddedSystems.com>
+ 36 files changed, 1349 insertions(+), 19 deletions(-)
+ rename recipes-core/systemd/{systemd-conf => systemd-conf.ori}/10-end0.network (100%)
+ rename recipes-core/systemd/{systemd-conf => systemd-conf.ori}/10-end1.network (100%)
+ rename recipes-core/systemd/{systemd-conf => systemd-conf.ori}/10-end2.network (100%)
+ rename recipes-core/systemd/{systemd-conf => systemd-conf.ori}/10-end3.network (100%)
+ rename recipes-core/systemd/{systemd-conf => systemd-conf.ori}/10-end4.network (100%)
+ rename recipes-core/systemd/{systemd-conf => systemd-conf.ori}/10-ethernet.link (100%)
+ create mode 100644 recipes-core/systemd/systemd-conf.ori/10-wait-online-any.conf
+ rename recipes-core/systemd/{systemd-conf => systemd-conf.ori}/10-watchdog.conf (100%)
+ rename recipes-core/systemd/{systemd-conf => systemd-conf.ori}/11-can.network (100%)
+ rename recipes-core/systemd/{systemd-conf => systemd-conf.ori}/11-dcan.network (100%)
+ create mode 100644 recipes-core/systemd/systemd-conf.ori/11-fcan.network
+ rename recipes-core/systemd/{systemd-conf => systemd-conf.ori}/11-main_mcan.network (100%)
+ rename recipes-core/systemd/{systemd-conf => systemd-conf.ori}/11-mcu_mcan.network (100%)
+ create mode 100644 recipes-core/systemd/systemd-conf.ori/37-can-imx-soc.rules
+ rename recipes-core/systemd/{systemd-conf => systemd-conf.ori}/37-can-ti-soc.rules (100%)
+ create mode 100644 recipes-core/systemd/systemd-conf.ori/38-serial-ti-soc.rules
+ create mode 100644 recipes-core/systemd/systemd-conf.ori/39-gpio-ti-soc.rules
+ create mode 100644 recipes-core/systemd/systemd-conf.ori/45-disable-multitouch-mouse.rules
+ create mode 100644 recipes-core/systemd/systemd-conf.ori/81-hwmon-temp-tmp102-ddr.rules
+ create mode 100644 recipes-core/systemd/systemd-conf.ori/82-hwmon-temp-libra.rules
+ rename recipes-core/systemd/{systemd-conf => systemd-conf.ori}/86-k3-remoteproc.rules (100%)
+ rename recipes-core/systemd/{systemd-conf => systemd-conf.ori}/90-dhcp-default.network (100%)
+ create mode 100644 recipes-core/systemd/systemd-conf.ori/90-phycam.rules
+ create mode 100644 recipes-core/systemd/systemd-conf.ori/cpuidle-disable-state.rules
+ create mode 100644 recipes-core/systemd/systemd-conf.ori/imx8mp-phyflex-libra-rdk-2/90-phycam.rules
+ create mode 100644 recipes-core/systemd/systemd-conf.ori/j721s2/90-phycam.rules
+ create mode 100644 recipes-core/systemd/systemd-conf.ori/mx6ul-generic-bsp/90-phycam.rules
+ create mode 100644 recipes-core/systemd/systemd-conf.ori/mx8mm-generic-bsp/90-phycam.rules
+ create mode 100644 recipes-core/systemd/systemd-conf.ori/mx93-generic-bsp/90-phycam.rules
+ create mode 100644 recipes-core/systemd/systemd-conf.ori/mx95-generic-bsp/90-phycam.rules
+ create mode 100644 recipes-core/systemd/systemd-conf.ori/phyboard-lyra/90-phycam.rules
+ rename recipes-core/systemd/{systemd-conf => systemd-conf.ori}/phyboard-pollux-imx8mp-3/10-enp1s0.network (100%)
+ create mode 100644 recipes-core/systemd/systemd-conf.ori/phyboard-pollux-imx8mp-3/90-phycam.rules
+ create mode 100644 recipes-core/systemd/systemd-conf.ori/stm32mp13common/90-phycam.rules
+ create mode 100644 recipes-core/systemd/systemd-conf.ori/stm32mp2common/90-phycam.rules
+Successfully rebased and updated refs/heads/2026-08-11-training-merged.
+
+I had to hack:
+
+diff --git a/recipes-images/bundles/phytec-base-bundle.inc b/recipes-images/bundles/phytec-base-bundle.inc
+index d1f8e29f..b776bd8e 100644
+--- a/recipes-images/bundles/phytec-base-bundle.inc
++++ b/recipes-images/bundles/phytec-base-bundle.inc
+@@ -34,6 +34,7 @@ def bootloader_filename(d):
+         'barebox': d.getVar('BAREBOX_BINARY'),
+         'u-boot-phytec-imx': 'u-boot.imx',
+         'u-boot-phytec': d.getVar('IMAGE_BOOTLOADER'),
++        'u-boot': d.getVar('IMAGE_BOOTLOADER'),
+         'imx-boot': 'imx-boot',
+         'ti-boot-container': 'ti-boot-container.img'
+     }
+
+Then bitbake core-image-minimal built.
+
 
