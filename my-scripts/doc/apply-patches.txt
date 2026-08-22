@@ -1,0 +1,2 @@
+git apply --check ../patches/meta-ampliphy-patches/*.patch
+git am ../patches/meta-ampliphy-patches/*.patch
