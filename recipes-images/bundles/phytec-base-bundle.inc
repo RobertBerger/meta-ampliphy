@@ -34,6 +34,8 @@ def bootloader_filename(d):
         'barebox': d.getVar('BAREBOX_BINARY'),
         'u-boot-phytec-imx': 'u-boot.imx',
         'u-boot-phytec': d.getVar('IMAGE_BOOTLOADER'),
+        'u-boot': d.getVar('IMAGE_BOOTLOADER'),
+        'u-boot-master': d.getVar('IMAGE_BOOTLOADER'),
         'imx-boot': 'imx-boot',
         'ti-boot-container': 'ti-boot-container.img'
     }
