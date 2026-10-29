@@ -17,7 +17,11 @@ RAUC_BUNDLE_SLOTS ?= " \
 "
 
 RAUC_SLOT_rootfs[type] ?= "image"
-RAUC_SLOT_rootfs[adaptive] ?= "block-hash-index"
+# Dynamically enable adaptive updates only if 'rauc_adaptive' is in DISTRO_FEATURES
+# I'll just copy the raucb on the target and install it for testing.
+# Adaptive updates are very slow when rauc install is executed the first time on both systems
+# since hashes are calculated
+RAUC_SLOT_rootfs[adaptive] ?= "${@bb.utils.contains('DISTRO_FEATURES', 'rauc_adaptive', 'block-hash-index', '', d)}"
 RAUC_IMAGE_FSTYPE ?= "${@bb.utils.contains('MACHINE_FEATURES','emmc','ext4','ubifs', d)}"
 
 RAUC_SLOT_kernel ?= "${PREFERRED_PROVIDER_virtual/kernel}"
@@ -100,12 +104,8 @@ python do_configure:append() {
 }
 
 do_bundle:prepend() {
-        # Workaround: Sets OPENSSL_ENGINES env var, so openssl library does not search in its own sysroot for engines,
-        # but rather in the sysroot of the recipe using do_bundle()
-
-        # dir name depends on the version, so best to extract it from openssl
-        engines_dir=`basename $( openssl version -e | sed -e 's/.*"\(.*\)".*/\1/g')`
-        export OPENSSL_ENGINES="${WORKDIR}/recipe-sysroot-native/usr/lib/${engines_dir}"
+        # hardcoded OPENSSL_ENGINES - needed for new openssl version
+        export OPENSSL_ENGINES="${WORKDIR}/recipe-sysroot-native/usr/lib/engines-3"
         if [ -n "${RAUC_PKCS11_MODULE}" ] ; then
             export RAUC_PKCS11_MODULE="${RAUC_PKCS11_MODULE}"
         fi
@@ -126,3 +126,5 @@ RAUC_INTERMEDIATE_CERT_FILE ?= "${CERT_PATH}/rauc-intermediate/ca.cert.pem"
 RAUC_INTERMEDIATE = "${@oe.utils.conditional('RAUC_INTERMEDIATE_CERT_FILE', "", "", "--intermediate=${RAUC_INTERMEDIATE_CERT_FILE}", d)}"
 BUNDLE_ARGS += "${RAUC_INTERMEDIATE}"
 CONVERT_ARGS += "${RAUC_INTERMEDIATE}"
+
+do_configure[depends] += "virtual/kernel:do_deploy virtual/bootloader:do_deploy"

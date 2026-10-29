@@ -1,18 +1,51 @@
 #!/bin/sh
+# Target device partition passed via udev %k ($1)
+TARGET_PART="$1"
 
-RAUC_SYSTEM_CONF="/usr/lib/rauc/system.conf"
-ROOT_DEV=$(mount | grep -w "/" | cut -d " " -f 1)
-if [ ! -e "$RAUC_SYSTEM_CONF" ]; then
-        # Distro without RAUC detected. Boot partition is assumed to be always
-        # p1 of the same device as the rootfs.
-        test "/dev/$1" = "${ROOT_DEV%p*}p1"
-        exit $?
+if [ -z "$TARGET_PART" ]; then
+    exit 1
 fi
 
-PARSED_CONF=$(awk '/\[/{prefix=$0; next} $1{print prefix $0}' $RAUC_SYSTEM_CONF)
-ROOT_SLOT=$(echo "$PARSED_CONF" | grep "$ROOT_DEV" | grep -Eo "root[a-z0-9]*\.[01]")
-BOOT_SLOT=$(echo "$PARSED_CONF" | grep "$1" | grep -E "\[slot\.boot[a-z0-9]*\.[01]\]" | grep -Eo "[a-z0-9]+\.[01]")
-PARENT_ROOT_SLOT=$(echo "$PARSED_CONF" | grep "\[slot\.$BOOT_SLOT\]parent=" | grep -o "root[a-z0-9]*\.[01]")
+# 1. DYNAMIC NFS/NETWORK DETECTION
+ROOT_FS_TYPE=$(awk '$2 == "/" {print $3}' /proc/mounts)
+if [ "$ROOT_FS_TYPE" = "nfs" ] || [ "$ROOT_FS_TYPE" = "nfs4" ] || grep -q -E "root=/dev/nfs|root=nfs|nfsroot=" /proc/cmdline; then
+    # NETWORK BOOT FALLBACK ARCHITECTURE:
+    # Safely point /dev/boot to partition 1 of any found card slot during network testing
+    if [ "$TARGET_PART" = "mmcblk1p1" ] || [ "$TARGET_PART" = "mmcblk2p1" ] || [ "$TARGET_PART" = "mmcblk0p1" ]; then
+        exit 0
+    fi
+    exit 1
+fi
 
-test "$ROOT_SLOT" = "$PARENT_ROOT_SLOT"
-exit $?
+# 2. STANDARD LOCAL STORAGE RESOLUTION FALLBACK
+ROOT_DEV_RAW=$(tr ' ' '\n' < /proc/cmdline | grep '^root=' | cut -d= -f2)
+if [ "$ROOT_DEV_RAW" = "/dev/root" ] || [ -z "$ROOT_DEV_RAW" ]; then
+    ROOT_DEV_RAW=$(awk '$2 == "/" {print $1}' /proc/mounts)
+fi
+
+ROOT_DEV=$(readlink -f "$ROOT_DEV_RAW")
+if ! echo "$ROOT_DEV" | grep -q "^/dev/"; then
+    exit 1
+fi
+
+# Isolate parent storage nodes cleanly
+BOOT_DISK=$(basename "$ROOT_DEV" | sed -E 's/p[0-9]+$//')
+BOOT_PART_NUM=$(basename "$ROOT_DEV" | grep -o -E '[0-9]+$')
+
+if [ -n "$BOOT_DISK" ] && [ -n "$BOOT_PART_NUM" ]; then
+    # DYNAMIC TWIN-SLOT HARDWARE MATRIX MAP
+    if [ "$BOOT_PART_NUM" = "5" ]; then
+        EXPECTED_BOOT_PART="${BOOT_DISK}p1"   # Active root p5 -> companion boot p1
+    elif [ "$BOOT_PART_NUM" = "6" ]; then
+        EXPECTED_BOOT_PART="${BOOT_DISK}p2"   # Active root p6 -> companion boot p2
+    else
+        EXPECTED_BOOT_PART="${BOOT_DISK}p1"   # Default fallback
+    fi
+
+    if [ "$TARGET_PART" = "$EXPECTED_BOOT_PART" ]; then
+        exit 0
+    fi
+fi
+
+exit 1
+

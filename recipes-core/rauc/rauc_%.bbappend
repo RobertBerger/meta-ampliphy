@@ -42,6 +42,7 @@ do_install:append() {
 
 	install -m 0774 ${UNPACKDIR}/rauc-pre-install.sh ${D}${libdir}/rauc
 	install -m 0774 ${UNPACKDIR}/rauc-post-install.sh ${D}${libdir}/rauc
+        #install -m 0774 ${UNPACKDIR}/hooks.sh ${D}${libdir}/rauc
 }
 
 FILES:rauc-update-usb += " \

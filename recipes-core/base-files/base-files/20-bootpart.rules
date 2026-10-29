@@ -1,1 +1,7 @@
-KERNEL=="mmcblk[0-9]*p[0-9]*", PROGRAM="@BINDIR@/isbootpart %k", SYMLINK+="boot"
+# Try to match the active boot partition passed directly from the bootloader command line
+IMPORT{cmdline}="rauc.slot"
+ENV{rauc.slot}=="system0", KERNEL=="mmcblk[0-9]*p1", SYMLINK+="boot"
+ENV{rauc.slot}=="system1", KERNEL=="mmcblk[0-9]*p2", SYMLINK+="boot"
+
+# Fallback to the native script ONLY if the command line attributes are missing
+ENV{rauc.slot}=="", KERNEL=="mmcblk[0-9]*p[0-9]*", PROGRAM="/usr/bin/isbootpart %k", SYMLINK+="boot"
