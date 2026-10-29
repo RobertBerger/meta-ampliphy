@@ -1,0 +1,17 @@
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
+
+require phytec-base-bundle.inc
+RAUC_SLOT_rootfs ?= "phytec-headless-image"
+
+LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
+
+# 1. Add your custom hook script to the bundle workspace
+SRC_URI += "file://hooks.sh"
+
+# 3. FIX FOR WARNING: Map the hook file to the bundle global hooks flag variable
+RAUC_BUNDLE_HOOKS = "hooks.sh"
+RAUC_BUNDLE_HOOKS[file] = "hooks.sh"
+
+# 4. Inject the hooks=install property under the [image.boot] slot block
+RAUC_SLOT_boot[hooks] = "install"
