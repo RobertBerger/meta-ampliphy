@@ -1,0 +1,9 @@
+#!/bin/sh
+TARGET_DIR="$1"
+
+# Check if running on an NFS root tree
+if awk '$2 == "/" {print $3}' /proc/mounts | grep -q -E "nfs|nfs4" || grep -q -E "root=/dev/nfs|nfsroot=" /proc/cmdline; then
+    # Dynamically mask the /boot mounts so systemd skips them entirely
+    ln -sf /dev/null "${TARGET_DIR}/boot.mount"
+    ln -sf /dev/null "${TARGET_DIR}/boot.automount"
+fi

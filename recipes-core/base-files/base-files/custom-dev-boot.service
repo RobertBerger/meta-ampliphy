@@ -1,0 +1,15 @@
+[Unit]
+Description=Dynamic Partition Mounting Hook for RAUC Slots
+DefaultDependencies=no
+Conflicts=umount.target
+After=systemd-udevd.service udevadm-trigger.service
+Before=multi-user.target rauc.service
+
+[Service]
+Type=oneshot
+ExecStart=@SBINDIR@/u-boot-dynamic-link.sh
+RemainAfterExit=yes
+MountFlags=shared
+
+[Install]
+WantedBy=multi-user.target

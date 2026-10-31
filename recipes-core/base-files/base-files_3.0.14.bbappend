@@ -1,10 +1,13 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
 
-SRC_URI:append = "file://fstab \
+SRC_URI:append = " file://fstab \
                   file://print_issue.sh \
                   file://base-files.conf \
                   file://20-bootpart.rules \
                   file://isbootpart \
+                  file://u-boot-dynamic-link.sh \
+                  file://custom-dev-boot.service \
+                  file://nfs-boot-mask \
 "
 
 dirs755:append = " ${sysconfdir}/profile.d"
@@ -33,51 +36,25 @@ do_install:append() {
 
     # 3. Install your reliable runtime mount manager script into sbindir
     install -d ${D}${sbindir}
-    cat << 'EOF' > ${D}${sbindir}/u-boot-dynamic-link.sh
-#!/bin/sh
-
-# Discover active root storage base drive path dynamically at late boot stage
-ROOT_DEV_RAW=$(tr ' ' '\n' < /proc/cmdline | grep '^root=' | cut -d= -f2)
-if [ "$ROOT_DEV_RAW" = "/dev/root" ] || [ -z "$ROOT_DEV_RAW" ]; then
-    ROOT_DEV_RAW=$(awk '$2 == "/" {print $1}' /proc/mounts)
-fi
-
-ROOT_DEV=$(readlink -f "$ROOT_DEV_RAW")
-BOOT_DISK=$(basename "$ROOT_DEV" | sed -E 's/p[0-9]+$//')
-
-if [ -n "$BOOT_DISK" ] && [ -b "/dev/${BOOT_DISK}" ]; then
-    echo "Custom dynamic mount manager executing onto block layer: /dev/${BOOT_DISK}"
-    mkdir -p /mnt/config /mnt/artifacts
-
-    # Secure late runtime partition execution
-    mount -t ext4 -o defaults "/dev/${BOOT_DISK}p3" /mnt/config 2>/dev/null
-    mount -t ext4 -o defaults "/dev/${BOOT_DISK}p7" /mnt/artifacts 2>/dev/null
-fi
-EOF
-    chmod 0755 ${D}${sbindir}/u-boot-dynamic-link.sh
+    install -m 0755 ${UNPACKDIR}/u-boot-dynamic-link.sh ${D}${sbindir}/u-boot-dynamic-link.sh
 
     # 4. Install your custom service manager unit file
     install -d ${D}${systemd_system_unitdir}
-    cat << 'EOF' > ${D}${systemd_system_unitdir}/custom-dev-boot.service
-[Unit]
-Description=Dynamic Partition Mounting Hook for RAUC Slots
-DefaultDependencies=no
-Conflicts=umount.target
-After=systemd-udevd.service udevadm-trigger.service
-Before=multi-user.target rauc.service
-
-[Service]
-Type=oneshot
-ExecStart=${sbindir}/u-boot-dynamic-link.sh
-RemainAfterExit=yes
-
-[Install]
-WantedBy=multi-user.target
-EOF
+    # Process the template directly out to the destination directory
+    sed 's#@SBINDIR@#${sbindir}#g' ${UNPACKDIR}/custom-dev-boot.service > ${D}${systemd_system_unitdir}/custom-dev-boot.service
+    # Secure the file permissions on the newly generated output file
+    chmod 0644 ${D}${systemd_system_unitdir}/custom-dev-boot.service
 
     # 5. Create the enabling symlink target for startup automation
     install -d ${D}${sysconfdir}/systemd/system/multi-user.target.wants
     ln -sf ${systemd_system_unitdir}/custom-dev-boot.service ${D}${sysconfdir}/systemd/system/multi-user.target.wants/custom-dev-boot.service
+
+    # 6. Instead of forcing udev to fake a device node,
+    #    we can instruct the system to dynamically mask the /boot mount if it detects a network filesystem root.
+    #    Systemd checks its generator paths before evaluating fstab, so this completely removes the roadblock before the timeout loop can even start.
+    #    We create a small systemd generator script inside your rootfs at /lib/systemd/system-generators/nfs-boot-mask
+    install -d ${D}${systemd_unitdir}/system-generators
+    install -m 0755 ${UNPACKDIR}/nfs-boot-mask ${D}${systemd_unitdir}/system-generators/nfs-boot-mask
 }
 
 do_install_basefilesissue:append() {

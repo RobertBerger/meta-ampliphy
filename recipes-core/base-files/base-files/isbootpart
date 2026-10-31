@@ -6,18 +6,7 @@ if [ -z "$TARGET_PART" ]; then
     exit 1
 fi
 
-# 1. DYNAMIC NFS/NETWORK DETECTION
-ROOT_FS_TYPE=$(awk '$2 == "/" {print $3}' /proc/mounts)
-if [ "$ROOT_FS_TYPE" = "nfs" ] || [ "$ROOT_FS_TYPE" = "nfs4" ] || grep -q -E "root=/dev/nfs|root=nfs|nfsroot=" /proc/cmdline; then
-    # NETWORK BOOT FALLBACK ARCHITECTURE:
-    # Safely point /dev/boot to partition 1 of any found card slot during network testing
-    if [ "$TARGET_PART" = "mmcblk1p1" ] || [ "$TARGET_PART" = "mmcblk2p1" ] || [ "$TARGET_PART" = "mmcblk0p1" ]; then
-        exit 0
-    fi
-    exit 1
-fi
-
-# 2. STANDARD LOCAL STORAGE RESOLUTION FALLBACK
+# STANDARD LOCAL STORAGE RESOLUTION FALLBACK
 ROOT_DEV_RAW=$(tr ' ' '\n' < /proc/cmdline | grep '^root=' | cut -d= -f2)
 if [ "$ROOT_DEV_RAW" = "/dev/root" ] || [ -z "$ROOT_DEV_RAW" ]; then
     ROOT_DEV_RAW=$(awk '$2 == "/" {print $1}' /proc/mounts)
@@ -48,4 +37,3 @@ if [ -n "$BOOT_DISK" ] && [ -n "$BOOT_PART_NUM" ]; then
 fi
 
 exit 1
-
