@@ -52,9 +52,18 @@ do_install:append() {
     # 6. Instead of forcing udev to fake a device node,
     #    we can instruct the system to dynamically mask the /boot mount if it detects a network filesystem root.
     #    Systemd checks its generator paths before evaluating fstab, so this completely removes the roadblock before the timeout loop can even start.
-    #    We create a small systemd generator script inside your rootfs at /lib/systemd/system-generators/nfs-boot-mask
+    #    We create a small systemd generator script inside the rootfs at /lib/systemd/system-generators/nfs-boot-mask
     install -d ${D}${systemd_unitdir}/system-generators
     install -m 0755 ${UNPACKDIR}/nfs-boot-mask ${D}${systemd_unitdir}/system-generators/nfs-boot-mask
+
+    # Conditionally inject advanced layout mount targets
+    # only if the advanced layout variable flag is set
+    if [ "${PARTUP_LAYOUT_CONFIG}" = "layout-rauc-advanced.yaml" ]; then
+        install -d ${D}/mnt/etc-overlay
+        install -d ${D}/mnt/genericoverlay
+        install -d ${D}/mnt/persistent-data
+        echo "Advanced layout directory provisioning complete."
+    fi
 }
 
 do_install_basefilesissue:append() {

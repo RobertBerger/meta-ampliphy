@@ -6,4 +6,10 @@ if awk '$2 == "/" {print $3}' /proc/mounts | grep -q -E "nfs|nfs4" || grep -q -E
     # Dynamically mask the /boot mounts so systemd skips them entirely
     ln -sf /dev/null "${TARGET_DIR}/boot.mount"
     ln -sf /dev/null "${TARGET_DIR}/boot.automount"
+
+    # Mask our new custom layout units to bypass block operations during NFS execution
+    ln -sf /dev/null "${TARGET_DIR}/mnt-etc\\x2doverlay.mount"
+    ln -sf /dev/null "${TARGET_DIR}/mnt-generic\\x2doverlay.mount"
+    ln -sf /dev/null "${TARGET_DIR}/mnt-artifacts.mount"
+    ln -sf /dev/null "${TARGET_DIR}/custom-dev-boot.service"
 fi
