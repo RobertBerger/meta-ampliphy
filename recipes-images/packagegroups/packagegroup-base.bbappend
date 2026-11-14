@@ -45,5 +45,6 @@ RDEPENDS:packagegroup-base-wifi += " \
 "
 
 RDEPENDS:packagegroup-base-wifi:remove:ti-soc = "linux-firmware-wl18xx"
-RDEPENDS:packagegroup-base-wifi:append:ti-soc = " wl18xx-fw"
+# this is from meta-ti and I am not using meta-ti here
+#RDEPENDS:packagegroup-base-wifi:append:ti-soc = " wl18xx-fw"
 RDEPENDS:packagegroup-base-wifi:append:phyflex-phyvip = " linux-firmware-cc33xx"
