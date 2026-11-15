@@ -6,29 +6,26 @@ if [ -z "$TARGET_PART" ]; then
     exit 1
 fi
 
-# STANDARD LOCAL STORAGE RESOLUTION FALLBACK
 ROOT_DEV_RAW=$(tr ' ' '\n' < /proc/cmdline | grep '^root=' | cut -d= -f2)
 if [ "$ROOT_DEV_RAW" = "/dev/root" ] || [ -z "$ROOT_DEV_RAW" ]; then
     ROOT_DEV_RAW=$(awk '$2 == "/" {print $1}' /proc/mounts)
 fi
 
 ROOT_DEV=$(readlink -f "$ROOT_DEV_RAW")
-if ! echo "$ROOT_DEV" | grep -q "^/dev/"; then
+if ! echo "$ROOT_DEV" | grep -q "^/dev/mmcblk"; then
     exit 1
 fi
 
-# Isolate parent storage nodes cleanly
 BOOT_DISK=$(basename "$ROOT_DEV" | sed -E 's/p[0-9]+$//')
 BOOT_PART_NUM=$(basename "$ROOT_DEV" | grep -o -E '[0-9]+$')
 
 if [ -n "$BOOT_DISK" ] && [ -n "$BOOT_PART_NUM" ]; then
-    # DYNAMIC TWIN-SLOT HARDWARE MATRIX MAP
     if [ "$BOOT_PART_NUM" = "5" ]; then
         EXPECTED_BOOT_PART="${BOOT_DISK}p1"   # Active root p5 -> companion boot p1
     elif [ "$BOOT_PART_NUM" = "6" ]; then
         EXPECTED_BOOT_PART="${BOOT_DISK}p2"   # Active root p6 -> companion boot p2
     else
-        EXPECTED_BOOT_PART="${BOOT_DISK}p1"   # Default fallback
+        exit 1
     fi
 
     if [ "$TARGET_PART" = "$EXPECTED_BOOT_PART" ]; then
