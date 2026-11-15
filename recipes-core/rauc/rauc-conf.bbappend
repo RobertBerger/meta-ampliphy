@@ -15,6 +15,8 @@ RAUC_KEYRING_FILE_DEVICE_PATH ?= "${@os.path.basename(d.getVar("RAUC_KEYRING_FIL
 SRC_URI += " \
     ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'file://system_emmc.conf', 'file://system_nand.conf', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'sd', 'file://system_sd.conf', '', d)} \
+    file://rauc-select-system-conf.sh \
+    file://override.conf \
 "
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
@@ -33,9 +35,11 @@ SD_DEV ??= "0"
 SD_ROOTFS_0_DEV ??= "/dev/mmcblk${SD_DEV}p5"
 SD_ROOTFS_1_DEV ??= "/dev/mmcblk${SD_DEV}p6"
 
-# Define new template defaults specific to the i.MX8M Plus geometry constraints
+# Define raw bootloader region defaults (i.MX8M Plus vs TI AM335x)
 SD_BOOT_REG_START ??= "32K"
 SD_BOOT_REG_SIZE ??= "4M"
+SD_BOOT_REG_START:ti33x ?= "128K"
+SD_BOOT_REG_SIZE:ti33x ?= "256K"
 
 USE_BOOTLOADER_SLOT ?= "${USE_BOOTLOADER_SLOT_WEAK_DEFAULT}"
 USE_BOOTLOADER_SLOT_WEAK_DEFAULT = "true"
@@ -62,6 +66,7 @@ def map_system_conf_bootloader(d):
         "barebox": "barebox",
         "u-boot": "uboot",
         "u-boot-master": "uboot",
+        "u-boot-imx": "uboot",
         "u-boot-phytec": "uboot",
         "u-boot-phytec-imx": "uboot",
         "u-boot-phytec-ti": "uboot"
@@ -74,7 +79,7 @@ def map_system_conf_bootloader(d):
         return bootloader_map[bootloader]
 
 do_install:prepend() {
-    # 1. Process eMMC template (Unchanged)
+    # 1. Process eMMC template
     if ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'true', 'false', d)}; then
         cp ${UNPACKDIR}/system_emmc.conf ${UNPACKDIR}/system_emmc_final.conf
         sed -i \
@@ -90,7 +95,7 @@ do_install:prepend() {
             ${UNPACKDIR}/system_emmc_final.conf
     fi
 
-    # 2. Process SD card template with your new dynamic region variables
+    # 2. Process SD card template with dynamic region variables
     if ${@bb.utils.contains('MACHINE_FEATURES', 'sd', 'true', 'false', d)}; then
         cp ${UNPACKDIR}/system_sd.conf ${UNPACKDIR}/system_sd_final.conf
         sed -i \
@@ -107,7 +112,7 @@ do_install:prepend() {
             ${UNPACKDIR}/system_sd_final.conf
     fi
 
-    # 3. Satisfy core recipes requirements (Unchanged)
+    # 3. Satisfy core recipe requirements
     if [ -f ${UNPACKDIR}/system_emmc_final.conf ]; then
         cp ${UNPACKDIR}/system_emmc_final.conf ${UNPACKDIR}/system.conf
     else
@@ -116,15 +121,14 @@ do_install:prepend() {
 }
 
 do_install:append() {
-    # FIX: Create target config directories before executing copies to prevent shell execution failure flags
     install -d ${D}${sysconfdir}/rauc
 
-    # 1. Force copy the certificate out of CERT_PATH into UNPACKDIR so the validation loops pass safely
+    # 1. Copy certificate from CERT_PATH into UNPACKDIR so validation loops pass safely
     if [ -f "${CERT_PATH}/rauc/${RAUC_KEYRING_FILE}" ]; then
         cp "${CERT_PATH}/rauc/${RAUC_KEYRING_FILE}" "${UNPACKDIR}/${RAUC_KEYRING_FILE}"
     fi
 
-    # Install files depending strictly on what is enabled
+    # Install system_emmc.conf / system_sd.conf based on MACHINE_FEATURES
     if ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'true', 'false', d)}; then
         install -m 0644 ${UNPACKDIR}/system_emmc_final.conf ${D}${sysconfdir}/rauc/system_emmc.conf
     fi
@@ -133,32 +137,22 @@ do_install:append() {
         install -m 0644 ${UNPACKDIR}/system_sd_final.conf ${D}${sysconfdir}/rauc/system_sd.conf
     fi
 
-    # Smart compilation baseline linking selection
+    # Default build-time symlink fallback
     if ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'true', 'false', d)}; then
         ln -sf system_emmc.conf ${D}${sysconfdir}/rauc/system.conf
     elif ${@bb.utils.contains('MACHINE_FEATURES', 'sd', 'true', 'false', d)}; then
         ln -sf system_sd.conf ${D}${sysconfdir}/rauc/system.conf
     fi
 
-    # Universal target boot-time Systemd manager hook
-    install -d ${D}${sysconfdir}/systemd/system/rauc.service.d
-    cat <<EOF > ${D}${sysconfdir}/systemd/system/rauc.service.d/override.conf
-[Service]
-ExecStartPre=/bin/sh -c " \
-if [ -f /etc/rauc/system_sd.conf ] && [ -f /etc/rauc/system_emmc.conf ]; then \
-    if grep -q 'root=/dev/mmcblk1' /proc/cmdline || grep -q 'root=/dev/mapper/mmcblk1' /proc/cmdline; then \
-        ln -sf system_sd.conf /etc/rauc/system.conf; \
-    else \
-        ln -sf system_emmc.conf /etc/rauc/system.conf; \
-    fi \
-elif [ -f /etc/rauc/system_sd.conf ]; then \
-    ln -sf system_sd.conf /etc/rauc/system.conf; \
-elif [ -f /etc/rauc/system_emmc.conf ]; then \
-    ln -sf system_emmc.conf /etc/rauc/system.conf; \
-fi"
-EOF
+    # Install runtime RAUC config selector script and systemd drop-in override
+    install -d ${D}${libexecdir}
+    install -m 0755 ${UNPACKDIR}/rauc-select-system-conf.sh ${D}${libexecdir}/rauc-select-system-conf.sh
+    sed -i -e 's/@SD_DEV@/${SD_DEV}/g' ${D}${libexecdir}/rauc-select-system-conf.sh
 
-    # 2. Validate signature keys checking wrapper (Now safe because the file exists in UNPACKDIR)
+    install -d ${D}${sysconfdir}/systemd/system/rauc.service.d
+    install -m 0644 ${UNPACKDIR}/override.conf ${D}${sysconfdir}/systemd/system/rauc.service.d/override.conf
+
+    # 2. Validate signature keys
     if [ -f "${UNPACKDIR}/${RAUC_KEYRING_FILE}" ]; then
         shasum=$(sha256sum "${UNPACKDIR}/${RAUC_KEYRING_FILE}" | cut -d' ' -f1)
         if [ "$shasum" = "91efd86dfbffa360c909b06b54902348075c5ba7902ad1ec30d25527a1f8ca09" ]; then
@@ -170,6 +164,7 @@ EOF
 FILES:${PN} += " \
     ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', '${sysconfdir}/rauc/system_emmc.conf', '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'sd', '${sysconfdir}/rauc/system_sd.conf', '', d)} \
+    ${libexecdir}/rauc-select-system-conf.sh \
     ${sysconfdir}/systemd/system/rauc.service.d/override.conf \
 "
 
