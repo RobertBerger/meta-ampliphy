@@ -11,26 +11,27 @@ if [ "$ROOT_DEV_RAW" = "/dev/root" ] || [ -z "$ROOT_DEV_RAW" ]; then
     ROOT_DEV_RAW=$(awk '$2 == "/" {print $1}' /proc/mounts)
 fi
 
-ROOT_DEV=$(readlink -f "$ROOT_DEV_RAW")
-if ! echo "$ROOT_DEV" | grep -q "^/dev/mmcblk"; then
-    exit 1
-fi
+case "$ROOT_DEV_RAW" in
+    /dev/mmcblk*) ROOT_DEV="$ROOT_DEV_RAW" ;;
+    *) ROOT_DEV=$(readlink -f "$ROOT_DEV_RAW" 2>/dev/null) ;;
+esac
 
-BOOT_DISK=$(basename "$ROOT_DEV" | sed -E 's/p[0-9]+$//')
-BOOT_PART_NUM=$(basename "$ROOT_DEV" | grep -o -E '[0-9]+$')
-
-if [ -n "$BOOT_DISK" ] && [ -n "$BOOT_PART_NUM" ]; then
-    if [ "$BOOT_PART_NUM" = "5" ]; then
-        EXPECTED_BOOT_PART="${BOOT_DISK}p1"   # Active root p5 -> companion boot p1
-    elif [ "$BOOT_PART_NUM" = "6" ]; then
-        EXPECTED_BOOT_PART="${BOOT_DISK}p2"   # Active root p6 -> companion boot p2
-    else
+case "$ROOT_DEV" in
+    /dev/mmcblk*p5)
+        BOOT_DISK="${ROOT_DEV#/dev/}"
+        EXPECTED_BOOT_PART="${BOOT_DISK%p5}p1"
+        ;;
+    /dev/mmcblk*p6)
+        BOOT_DISK="${ROOT_DEV#/dev/}"
+        EXPECTED_BOOT_PART="${BOOT_DISK%p6}p2"
+        ;;
+    *)
         exit 1
-    fi
+        ;;
+esac
 
-    if [ "$TARGET_PART" = "$EXPECTED_BOOT_PART" ]; then
-        exit 0
-    fi
+if [ "$TARGET_PART" = "$EXPECTED_BOOT_PART" ]; then
+    exit 0
 fi
 
 exit 1

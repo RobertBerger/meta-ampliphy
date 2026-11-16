@@ -1,5 +1,5 @@
 # 1. Prevent duplicate auto-mounting of internal/SD partitions under /run/media
 SUBSYSTEM=="block", KERNEL=="mmcblk[0-9]*", ENV{UDISKS_IGNORE}="1", ENV{mount_options}="ignore"
 
-# 2. Match the active boot partition ONLY on the block device hosting /
-SUBSYSTEM=="block", KERNEL=="mmcblk[0-9]*p[0-9]*", PROGRAM="@BINDIR@/isbootpart %k", SYMLINK+="boot"
+# 2. Match the active boot partition ONLY on p1 or p2 of the block device hosting /
+SUBSYSTEM=="block", KERNEL=="mmcblk[0-9]*p[12]", PROGRAM="@BINDIR@/isbootpart %k", SYMLINK+="boot"
