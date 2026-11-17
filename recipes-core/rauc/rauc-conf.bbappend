@@ -43,7 +43,8 @@ SD_BOOT_REG_SIZE:ti33x ?= "256K"
 
 USE_BOOTLOADER_SLOT ?= "${USE_BOOTLOADER_SLOT_WEAK_DEFAULT}"
 USE_BOOTLOADER_SLOT_WEAK_DEFAULT = "true"
-USE_BOOTLOADER_SLOT_WEAK_DEFAULT:ti33x = "false"
+# we don't need this anymore - major update
+#USE_BOOTLOADER_SLOT_WEAK_DEFAULT:ti33x = "false"
 
 # Maintain caching dependencies for your extra variables
 do_fetch[vardeps] += " \
